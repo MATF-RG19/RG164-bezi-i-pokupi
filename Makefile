@@ -5,7 +5,7 @@ LDFLAGS = -L/usr/X11R6/lib -L/usr/pkg/lib
 LDLIBS  = -lglut -lGLU -lGL -lm
 
 $(PROGRAM): scena.o
-	$(CC) $(LDFLAGS) -o $(PROGRAM) scena.o $(LDLIBS)
+	$(CC) $(LDFLAGS) -o $(PROGRAM) scena.o  $(LDLIBS)
 
 .PHONY: beauty clean dist
 

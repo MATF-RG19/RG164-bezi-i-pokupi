@@ -1,11 +1,14 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <stdio.h>
+//#include "test.h"
 
 static void onDisplay(void);
 static void onKeyboard(unsigned char key,int x,int y);
 static void onReshape(int width,int height);
 //static void onTimer(void);
+
+static void drawPlayer();
 
 static int _width,_height;
 
@@ -21,7 +24,7 @@ int main(int argc,char** argv){
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(onReshape);
 	glutDisplayFunc(onDisplay);
-	glClearColor(0,1,0,0);
+	glClearColor(0,0,0,0);
 	
 	glEnable(GL_DEPTH_TEST);
 	glutMainLoop();
@@ -29,7 +32,7 @@ int main(int argc,char** argv){
 }
 
 static void onDisplay(void){
-	
+	//ispis("Bilo koja poruka");
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	//glViewport(0,0,width,height);
@@ -47,8 +50,7 @@ static void onDisplay(void){
             0, 1, 0
         );
 	
-	glColor3f(1,1,1);
-	glutWireCube(1);
+	drawPlayer();
 	glutSwapBuffers();
 }
 
@@ -70,3 +72,18 @@ static void onReshape(int width,int height){
     //glutPostRedisplay();
 }
 
+static void drawPlayer(){
+	glTranslatef(-1,-1,0);
+	glPushMatrix();
+	glColor3f(0,1,0);
+	glPushMatrix();
+	glTranslatef(0,0.3,0);
+	glutSolidSphere(0.1,100,100);
+	glPopMatrix();
+	glPushMatrix();
+	
+	glScalef(0.3,0.3,0.3);
+	glutSolidCube(1);
+	glPopMatrix();
+	glPopMatrix();
+}
