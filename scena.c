@@ -2,6 +2,9 @@
 #include <GL/glut.h>
 #include <stdio.h>
 #include <stdbool.h>
+
+#include <time.h>
+#include <math.h>
 //#include "test.h"
 
 #define TOCKICI_TIMER 0
@@ -13,13 +16,7 @@
 #define Y_MAX_POS 3.48
 #define X_MAX_NEG 4.02
 
-typedef struct Point{
-	float x,y;
-};
-
-/*bool inTriangle(Point A,Point B,Point C,Point P){
-	if((B.x-A.x)*(P.y))
-}*/
+int brPoeni=0;
 
 int rukeFlag=1;
 
@@ -30,8 +27,14 @@ static void onTimer(int value);
 
 static void drawPlayer();
 static void movePlayer();
+static void drawDiamond();
+static void chooseRandomXYDiamond();
+
+bool isCollision();
 
 float horisontal=0,vertical=0;
+
+float diamondX,diamondY;
 
 static int _width,_height;
 
@@ -48,6 +51,7 @@ int main(int argc,char** argv){
 	
 	glutCreateWindow("Bezi i pokupi");
 	
+	chooseRandomXYDiamond();
 	
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(onReshape);
@@ -75,7 +79,9 @@ static void onDisplay(void){
         );
 	
 	drawLines();
+	drawDiamond();
 	drawPlayer();
+	
 	glutSwapBuffers();
 }
 
@@ -90,21 +96,37 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'W':
 			//GORE
 			vertical+=0.03;
+			if(isCollision()){
+				printf("Pobeda!\n");
+				exit(0);
+			}
 			break;
 		case 's':
 		case 'S':
 			//DOLE
 			vertical-=0.03;
+			if(isCollision()){
+				printf("Pobeda!\n");
+				exit(0);
+			}
 			break;
 		case 'a':
 		case 'A':
 			//LEVO
 			horisontal-=0.03;
+			if(isCollision()){
+				printf("Pobeda!\n");
+				exit(0);
+			}
 			break;
 		case 'd':
 		case 'D':
 			//DESNO
 			horisontal+=0.03;
+			if(isCollision()){
+				printf("Pobeda!\n");
+				exit(0);
+			}
 			break;
 		default:
 			fprintf(stderr,"Greska pogresno dugme\n");
@@ -137,6 +159,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 			vertical=0;
 		}
 	}
+	
 	movePlayer();
 	printf("%f %f\n",horisontal,vertical);
 }
@@ -252,4 +275,56 @@ static void onTimer(int value){
 		}
 	}
 }
+
+static void drawDiamond(){
+	//GLUquadric *diamond=gluNewQuadric();
+	//glutSolidOctahedron();
+	glColor3f(1,0.3,0.3);
+	glPushMatrix();//pocetak za ceo diamond
+	glTranslatef(diamondX,diamondY,0);
+	glPushMatrix();//pocetak za prvi diamond
+	glTranslatef(-0.1,0,0);
+	glRotatef(180,0,1,0);
 	
+	glScalef(0.15,0.15,0.15);
+	glutSolidTetrahedron();
+	glPopMatrix();//kraj za prvi diamond
+	glPushMatrix();//pocetak za drugi diamond
+	//glTranslatef(diamondX,diamondY,0);
+	glScalef(0.15,0.15,0.15);
+	glutSolidTetrahedron();
+	glPopMatrix();//kraj za drugi diamond
+	glPopMatrix();//kraj za ceo diamond
+}
+
+static void chooseRandomXYDiamond(){
+	srand(time(NULL));
+	float r=((float)(rand()%4))/2.0*1.56;
+	printf("r je %f\n",r);
+	if(ceil(r)==1){
+		diamondX=-r;
+		diamondY=-r;
+	}
+	else if(((int)ceil(r))%2){
+		diamondX=r;
+		diamondY=1-r;
+	}
+	else{
+		diamondY=r;
+		diamondX=1-r;
+	}
+}
+	
+bool isCollision(){
+	if(fabs(horisontal-diamondX)<0.3 && fabs(vertical-diamondY)<0.3){
+		chooseRandomXYDiamond();
+		brPoeni++;
+		printf("Poeni:%i\n",brPoeni);
+		//drawDiamond();
+		
+		if(brPoeni==10){
+			return true;
+		}
+	}
+	return false;
+}
