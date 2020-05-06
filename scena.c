@@ -16,6 +16,9 @@
 #define Y_MAX_POS 3.48
 #define X_MAX_NEG 4.02
 
+#define KORAK_IGRACA 0.05
+
+
 int brPoeni=0;
 
 int rukeFlag=1;
@@ -31,12 +34,37 @@ static void drawDiamond();
 static void chooseRandomXYDiamond();
 
 bool isCollision();
+bool isInMap(float x,float y){
+	if(x >=0 && y<0){
+		if(((y+Y_MAX_NEG)*X_MAX_POS-Y_MAX_NEG*x)<0){
+			return false;
+		}
+	}
+	if(x>=0 && y>=0){
+		if(((-1*y*X_MAX_POS)-(Y_MAX_POS*(x-X_MAX_POS)))<0){
+			return false;
+		}
+	}
+	if(x<0 && y>=0){
+		if(((-1*X_MAX_NEG*(y-Y_MAX_POS))+Y_MAX_POS*x)<0){
+			return false;
+		}
+	}
+	if(x<0 && y<0){
+		if(X_MAX_NEG*y+Y_MAX_NEG*(x+X_MAX_NEG)<0){
+			return false;
+		}
+	}
+	return true;
+}
 
 float horisontal=0,vertical=0;
 
 float diamondX,diamondY;
 
-static int _width,_height;
+int preX,preY;
+
+//static int _width,_height;
 
 int ongoing=false;
 
@@ -50,7 +78,8 @@ int main(int argc,char** argv){
 	glutInitWindowPosition(100,100);
 	
 	glutCreateWindow("Bezi i pokupi");
-	
+	preX=preY=-500;
+	diamondX=-500,diamondY=-500;
 	chooseRandomXYDiamond();
 	
 	glutKeyboardFunc(onKeyboard);
@@ -95,7 +124,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'w':
 		case 'W':
 			//GORE
-			vertical+=0.03;
+			vertical+=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
 				exit(0);
@@ -104,7 +133,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 's':
 		case 'S':
 			//DOLE
-			vertical-=0.03;
+			vertical-=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
 				exit(0);
@@ -113,7 +142,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'a':
 		case 'A':
 			//LEVO
-			horisontal-=0.03;
+			horisontal-=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
 				exit(0);
@@ -122,15 +151,13 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'd':
 		case 'D':
 			//DESNO
-			horisontal+=0.03;
+			horisontal+=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
 				exit(0);
 			}
 			break;
 		default:
-			fprintf(stderr,"Greska pogresno dugme\n");
-			exit(1);
 			break;
 	}
 	//Provera za svaku od strana levo desno gore dole da li se igrac nalazi jos uvek na mapi
@@ -297,26 +324,66 @@ static void drawDiamond(){
 	glPopMatrix();//kraj za ceo diamond
 }
 
+
+
 static void chooseRandomXYDiamond(){
+	/*if(diamondX >-500 && diamondY>-500){
+		preX=diamondX;
+		preY=diamondY;
+	}*/
+	int znakX,znakY;
+	float rx,ry,dr;
+	while(!isInMap(diamondX,diamondY)){
 	srand(time(NULL));
-	float r=((float)(rand()%4))/2.0*1.56;
-	printf("r je %f\n",r);
-	if(ceil(r)==1){
-		diamondX=-r;
-		diamondY=-r;
+	rx=rand()%4;
+	ry=rand()%4;
+	dr=(((float)(rand()%1000))/1000);
+		printf("rovi je %f,%f,%f\n",rx,ry,dr);
+	
+	switch(brPoeni%4){
+		case 0:
+			znakX=1;
+			znakY=1;
+			break;
+		case 1:
+			znakX=1;
+			znakY=-1;
+			break;
+		case 2:
+			znakX=-1;
+			znakY=-1;
+			break;
+		case 3:
+			znakX=-1;
+			znakY=1;
+			break;
 	}
-	else if(((int)ceil(r))%2){
-		diamondX=r;
-		diamondY=1-r;
-	}
-	else{
-		diamondY=r;
-		diamondX=1-r;
+		if(rx==3){
+			diamondX=znakX*rx-znakX*dr;
+			if(ry==3){
+				diamondY=znakY*ry-znakY*dr;
+			}
+			else {
+				diamondY=znakY*ry+znakY*dr;
+			}
+		}
+		else if(ry==3){
+			diamondY=znakY*ry-znakY*dr;
+			diamondX=znakX*rx+znakX*dr;
+		}
+		else{
+			diamondX=znakX*rx+znakX*dr;
+			diamondY=znakY*ry+znakY*dr;
+		}
+		printf("X:%f,Y:%f\n",diamondX,diamondY);
 	}
 }
+
+
 	
 bool isCollision(){
 	if(fabs(horisontal-diamondX)<0.3 && fabs(vertical-diamondY)<0.3){
+		diamondX=diamondY=-500;
 		chooseRandomXYDiamond();
 		brPoeni++;
 		printf("Poeni:%i\n",brPoeni);
