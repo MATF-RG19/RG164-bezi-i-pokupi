@@ -5,21 +5,9 @@
 
 #include <time.h>
 #include <math.h>
-//#include "test.h"
-
-#define TOCKICI_TIMER 0
-#define LRUKA_TIMER 1
-#define DRUKA_TIMER 2
-
-#define X_MAX_POS 3.57
-#define Y_MAX_NEG 3.93
-#define Y_MAX_POS 3.48
-#define X_MAX_NEG 4.02
-
-#define KORAK_IGRACA 0.05
+#include "test.h"
 
 
-int brPoeni=0;
 
 int rukeFlag=1;
 
@@ -31,62 +19,48 @@ static void onTimer(int value);
 static void drawPlayer();
 static void movePlayer();
 static void drawDiamond();
-static void chooseRandomXYDiamond();
+
+static void drawRunner();
 
 bool isCollision();
-bool isInMap(float x,float y){
-	if(x >=0 && y<0){
-		if(((y+Y_MAX_NEG)*X_MAX_POS-Y_MAX_NEG*x)<0){
-			return false;
-		}
-	}
-	if(x>=0 && y>=0){
-		if(((-1*y*X_MAX_POS)-(Y_MAX_POS*(x-X_MAX_POS)))<0){
-			return false;
-		}
-	}
-	if(x<0 && y>=0){
-		if(((-1*X_MAX_NEG*(y-Y_MAX_POS))+Y_MAX_POS*x)<0){
-			return false;
-		}
-	}
-	if(x<0 && y<0){
-		if(X_MAX_NEG*y+Y_MAX_NEG*(x+X_MAX_NEG)<0){
-			return false;
-		}
-	}
-	return true;
-}
 
 float horisontal=0,vertical=0;
 
-float diamondX,diamondY;
 
-int preX,preY;
 
-//static int _width,_height;
+float runnerX=RUNNER_POC,runnerY=RUNNER_POC;
 
-int ongoing=false;
+//static int _width,_height
 
-//crtanje koordinatnih osi za test
-static void drawLines();
+bool ongoing=false;
+
 
 int main(int argc,char** argv){
+	brPoeni=0;
+	boxFlag=-1;
+	openBox=0;
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(512,512);
 	glutInitWindowPosition(100,100);
 	
 	glutCreateWindow("Bezi i pokupi");
-	preX=preY=-500;
+	
 	diamondX=-500,diamondY=-500;
 	chooseRandomXYDiamond();
-	
+	//printf("BOX X:%f,Y:%f\n",boxX,boxY);
+	//printf("Runner interval%i\n",RUNNER_INTERVAL);
+	//chooseRandomXYBox();
+	zivot=1;
+	chooseRandomXYBox();
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(onReshape);
 	glutDisplayFunc(onDisplay);
 	glClearColor(0,0,0,0);
+	//glutTimerFunc(1,onTimer,RUNNER_TIMER);
 	
+	
+		
 	glEnable(GL_DEPTH_TEST);
 	glutMainLoop();
 	return 0;
@@ -95,22 +69,77 @@ int main(int argc,char** argv){
 static void onDisplay(void){
 	//ispis("Bilo koja poruka");
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//pocetak inicijalizacije svetla
+	/*GLfloat light_position[] = { 0, 0, 1, 0 };
+    GLfloat light_ambient[] = { 0, 0, 0, 1 };
+    GLfloat light_diffuse[] = { 1, 1, 1, 1 };
+    GLfloat light_specular[] = { 0.2, 0.2, 0.2, 1 };*/
+    //kraj inicijalizacije svetla
+
+    
+    /*GLfloat ambient_coeffs[] = { 0.3, 0.3, 0.7, 1 };
+
+   
+    GLfloat diffuse_coeffs[] = { 1, 1, 0, 1 };
+
+    GLfloat specular_coeffs[] = { 1, 1, 1, 1 };
+
+    
+   GLfloat shininess = 30;
+
+    
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_coeffs);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_coeffs);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+    glShadeModel(GL_FLAT);*/
 	
-	//pomocna funkcija za iscrtavanje koordinatnih osa
-	
-	//glViewport(0,0,width,height);
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    /*gluLookAt(
+            0, 0, 3,
+            -0.1, -0.1, 0,
+            0, 0, -1
+        );*/
     gluLookAt(
             0, 0, 3,
             -0.1, -0.1, 0,
             0, 0, -1
         );
-	
+	//if(boxFlag==1)
+		//drawBox();
+		//u onDisplay ne sme da stoji drawBox
+	/*if((zivot<3 && zivot>0) || zivot==3)
+		glutTimerFunc(BOX_INTERVAL,onTimer,BOX_TIMER);*/
+	//drawBox();
+	if(zivot==1){
+		//boxX=boxY=0;
+		glPushMatrix();
+		
+		drawBox();
+		glPopMatrix();
+	}
 	drawLines();
 	drawDiamond();
+	drawRunner();
 	drawPlayer();
-	
+	if(kolizija(horisontal,vertical,boxX,boxY)){
+		boxFlag=1;
+	}
+	//if(kolizija(horisontal,vertical,runnerX,runnerY))zivot--;
+	if(zivot==0){
+		printf("izgubili ste\n");
+		exit(0);
+	}
 	glutSwapBuffers();
 }
 
@@ -124,6 +153,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'w':
 		case 'W':
 			//GORE
+			rukeFlag*=-1;
 			vertical+=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
@@ -133,6 +163,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 's':
 		case 'S':
 			//DOLE
+			rukeFlag*=-1;
 			vertical-=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
@@ -142,7 +173,9 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'a':
 		case 'A':
 			//LEVO
+			rukeFlag*=-1;
 			horisontal-=KORAK_IGRACA;
+			
 			if(isCollision()){
 				printf("Pobeda!\n");
 				exit(0);
@@ -151,6 +184,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'd':
 		case 'D':
 			//DESNO
+			rukeFlag*=-1;
 			horisontal+=KORAK_IGRACA;
 			if(isCollision()){
 				printf("Pobeda!\n");
@@ -203,41 +237,48 @@ static void onReshape(int width,int height){
 }
 
 static void drawPlayer(){
-	GLUquadric* levi=gluNewQuadric();
-	//GLUquadric* desni=gluNewQuadric();
-	
+	GLUquadric* levaNoga=gluNewQuadric();
+	GLUquadric* desnaNoga=gluNewQuadric();
+	//glScalef(3,3,3);//pomocno skaliranje
 	glTranslatef(horisontal,vertical,0);
 	glPushMatrix();//cela figura
-	/*glPushMatrix();//podnozje
-	glutTimerFunc(1,onTimer,TOCKICI_TIMER);
-	glPushMatrix();
-	
-	glColor3f(0,1,0);
-	glTranslatef(-.18,-0.22,0);
+	glPushMatrix();//podnozje
+	glPushMatrix();//jedna noga
+	glRotatef(35*rukeFlag,1,0,0);
+	glTranslatef(-0.1,-0.1,0);
+	glRotatef(180,0,1,0);
+	glRotatef(180,1,0,0);
+	glRotatef(90,0,0,1);
 	glRotatef(90,0,1,0);
-	gluCylinder(levi,0.1,0.1,0.3,20,20);
-	glPopMatrix();
-	glPopMatrix();*///kraj podnozja
+	gluCylinder(desnaNoga,0.035,0.035,0.22,20,20);
+	glPopMatrix();//kraj jedne noge
+	glPushMatrix();//druga noga
+	glRotatef(-35*rukeFlag,1,0,0);
+	glTranslatef(0.1,-0.1,0);
+	glRotatef(180,0,1,0);
+	glRotatef(180,1,0,0);
+	glRotatef(90,0,0,1);
+	glRotatef(90,0,1,0);
+	
+	gluCylinder(levaNoga,0.035,0.035,0.22,20,20);
+	glPopMatrix();//kraj druge noge
+	glPopMatrix();//kraj podnozja
 	glColor3f(1,0,0);
 	glPushMatrix();//glava
 	glTranslatef(0,0.2,0);
 	glutSolidSphere(0.1,100,100);
 	glPopMatrix();//kraj glave
-	
 	glPushMatrix();//telo
 	glColor3f(0,1,0);
 	GLUquadric* levaRuka=gluNewQuadric();
 	GLUquadric* desnaRuka=gluNewQuadric();
 	glPushMatrix();//leva ruka
 	glRotatef(15,0,0,1);
-	//glutTimerFunc(10,onTimer,LRUKA_TIMER);
 	glTranslatef(0.1,0,0);
 	glRotatef(90,0,1,0);
 	gluCylinder(levaRuka,0.035,0.035,0.22,20,20);
 	glPopMatrix();//kraj leve ruke
 	glPushMatrix();//desna ruka
-	//glRotatef(-15,0,0,1);
-	//glutTimerFunc(10,onTimer,DRUKA_TIMER);
 	glTranslatef(-0.3,0,0);
 	glRotatef(90,0,1,0);
 	gluCylinder(desnaRuka,0.035,0.035,0.22,20,20);
@@ -260,51 +301,38 @@ static void movePlayer(){
 	glutPostRedisplay();
 }
 
-static void drawLines(){
-	glColor3f(1,0,0);
-	glBegin(GL_LINES);
-	glVertex3f(0,0,0);
-	glVertex3f(6,0,0);//crvena je x osa
-	glEnd();
-	glColor3f(0,1,0);
-	glBegin(GL_LINES);
-	glVertex3f(0,0,0);
-	glVertex3f(0,6,0);//zelena je y osa
-	glEnd();
-	glColor3f(0,0,1);
-	glBegin(GL_LINES);//plava je z osa
-	glVertex3f(0,0,0);
-	glVertex3f(0,0,6);
-	glEnd();
-}
+
+
+
 
 static void onTimer(int value){
-	if(value==TOCKICI_TIMER){
-		printf("IPAK SE OKRECE!\n");
-		glRotatef(23,1,0,0);
-	}
-	if(value==LRUKA_TIMER){
-		if(rukeFlag){
-			glRotatef(15,0,0,1);
-			//rukeFlag=!rukeFlag;
-		}
-		else{
-			glRotatef(-15,0,0,1);
-		}
-	}
-	if(value==DRUKA_TIMER){
-		if(rukeFlag){
-			glRotatef(-15,0,0,1);
-			//rukeFlag=!rukeFlag;
-		}
-		else{
-			glRotatef(15,0,0,1);
-		}
-	}
+	
+	/*if(value!=RUNNER_TIMER){
+		//horisontal,vertical,runnerX,runnerY
+		runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA/3;
+		runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA/3;
+		printf("Runner: %f,%f\n",runnerX,runnerY);
+		//drawRunner();
+		//glutPostRedisplay();
+		//glutTimerFunc(RUNNER_INTERVAL,onTimer,RUNNER_TIMER);
+	}*/
+	//if(value==BOX_TIMER){
+		//boxFlag*=-1;
+		//printf("Pozdrav iz box timera\n");
+		//printf("BOX X:%f,Y:%f\n",boxX,boxY);
+		//glPushMatrix();
+	
+	//chooseRandomXYBox();
+		/*drawBox();
+		glPopMatrix();
+		glutPostRedisplay();
+		glutTimerFunc(BOX_INTERVAL,onTimer,BOX_TIMER);
+	}*/
+	//else return;
 }
 
 static void drawDiamond(){
-	//GLUquadric *diamond=gluNewQuadric();
+	//GLUquadric *diamond=gluNewQuadric()
 	//glutSolidOctahedron();
 	glColor3f(1,0.3,0.3);
 	glPushMatrix();//pocetak za ceo diamond
@@ -323,63 +351,6 @@ static void drawDiamond(){
 	glPopMatrix();//kraj za drugi diamond
 	glPopMatrix();//kraj za ceo diamond
 }
-
-
-
-static void chooseRandomXYDiamond(){
-	/*if(diamondX >-500 && diamondY>-500){
-		preX=diamondX;
-		preY=diamondY;
-	}*/
-	int znakX,znakY;
-	float rx,ry,dr;
-	while(!isInMap(diamondX,diamondY)){
-	srand(time(NULL));
-	rx=rand()%4;
-	ry=rand()%4;
-	dr=(((float)(rand()%1000))/1000);
-		printf("rovi je %f,%f,%f\n",rx,ry,dr);
-	
-	switch(brPoeni%4){
-		case 0:
-			znakX=1;
-			znakY=1;
-			break;
-		case 1:
-			znakX=1;
-			znakY=-1;
-			break;
-		case 2:
-			znakX=-1;
-			znakY=-1;
-			break;
-		case 3:
-			znakX=-1;
-			znakY=1;
-			break;
-	}
-		if(rx==3){
-			diamondX=znakX*rx-znakX*dr;
-			if(ry==3){
-				diamondY=znakY*ry-znakY*dr;
-			}
-			else {
-				diamondY=znakY*ry+znakY*dr;
-			}
-		}
-		else if(ry==3){
-			diamondY=znakY*ry-znakY*dr;
-			diamondX=znakX*rx+znakX*dr;
-		}
-		else{
-			diamondX=znakX*rx+znakX*dr;
-			diamondY=znakY*ry+znakY*dr;
-		}
-		printf("X:%f,Y:%f\n",diamondX,diamondY);
-	}
-}
-
-
 	
 bool isCollision(){
 	if(fabs(horisontal-diamondX)<0.3 && fabs(vertical-diamondY)<0.3){
@@ -389,9 +360,73 @@ bool isCollision(){
 		printf("Poeni:%i\n",brPoeni);
 		//drawDiamond();
 		
-		if(brPoeni==10){
+		if(brPoeni==6){
 			return true;
 		}
 	}
 	return false;
+}
+
+static void drawRunner(){
+	glColor3f(0,0,1);
+	glPushMatrix();
+	glTranslatef(runnerX,runnerY,0);
+	GLUquadric* levaNoga=gluNewQuadric();
+	GLUquadric* desnaNoga=gluNewQuadric();
+	//glScalef(3,3,3);//pomocno skaliranje
+	runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA;
+	runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA;
+	//printf("Runner: %f,%f\n",runnerX,runnerY);
+	glPushMatrix();//cela figura
+	glPushMatrix();//podnozje
+	glPushMatrix();//jedna noga
+	glRotatef(35*rukeFlag,1,0,0);
+	glTranslatef(-0.1,-0.1,0);
+	glRotatef(180,0,1,0);
+	glRotatef(180,1,0,0);
+	glRotatef(90,0,0,1);
+	glRotatef(90,0,1,0);
+	gluCylinder(desnaNoga,0.035,0.035,0.22,20,20);
+	glPopMatrix();//kraj jedne noge
+	glPushMatrix();//druga noga
+	glRotatef(-35*rukeFlag,1,0,0);
+	glTranslatef(0.1,-0.1,0);
+	glRotatef(180,0,1,0);
+	glRotatef(180,1,0,0);
+	glRotatef(90,0,0,1);
+	glRotatef(90,0,1,0);
+	
+	gluCylinder(levaNoga,0.035,0.035,0.22,20,20);
+	glPopMatrix();//kraj druge noge
+	glPopMatrix();//kraj podnozja
+	
+	glPushMatrix();//glava
+	glTranslatef(0,0.2,0);
+	glutSolidSphere(0.1,100,100);
+	glPopMatrix();//kraj glave
+	glPushMatrix();//telo
+	GLUquadric* levaRuka=gluNewQuadric();
+	GLUquadric* desnaRuka=gluNewQuadric();
+	glPushMatrix();//leva ruka
+	glRotatef(15,0,0,1);
+	glTranslatef(0.1,0,0);
+	glRotatef(90,0,1,0);
+	gluCylinder(levaRuka,0.035,0.035,0.22,20,20);
+	glPopMatrix();//kraj leve ruke
+	glPushMatrix();//desna ruka
+	glTranslatef(-0.3,0,0);
+	glRotatef(90,0,1,0);
+	gluCylinder(desnaRuka,0.035,0.035,0.22,20,20);
+	glPopMatrix();//kraj desne ruke
+	rukeFlag=!rukeFlag;
+	//printf("%i\n",rukeFlag);
+	//glavni deo tela
+	glColor3f(1,1,0);
+	glScalef(0.3,0.3,0.3);
+	glutSolidSphere(0.5,20,20);
+	//kraj glavnog dela tela
+	glPopMatrix();//kraj tela
+	glPopMatrix();//kraj cele figure
+	glPopMatrix();
+	//glutTimerFunc(RUNNER_INTERVAL,onTimer,RUNNER_TIMER);
 }
