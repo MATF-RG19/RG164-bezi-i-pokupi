@@ -4,8 +4,8 @@ CFLAGS  = -g -ansi -Wall -I/usr/X11R6/include -I/usr/pkg/include -std=c99
 LDFLAGS = -L/usr/X11R6/lib -L/usr/pkg/lib
 LDLIBS  = -lglut -lGLU -lGL -lm
 
-$(PROGRAM): scena.o test.o
-	$(CC) $(LDFLAGS) -o $(PROGRAM) scena.o test.o test.h $(LDLIBS)
+$(PROGRAM): scena.o funkcije.o objekti.o pozivnefunkcije.o
+	$(CC) $(LDFLAGS) -o $(PROGRAM) scena.o funkcije.o funkcije.h objekti.o objekti.h pozivnefunkcije.o pozivnefunkcije.h makroipromenljive.h $(LDLIBS)
 
 .PHONY: beauty clean dist
 

@@ -6,10 +6,12 @@
 #include <math.h>
 #include <time.h>
 
-#include "test.h"
+#include "funkcije.h"
+#include "makroipromenljive.h"
+#include "objekti.h"
 
-void drawLines(){
-	//printf("Draw lines\n");
+/*void drawLines(){
+	
 	glColor3f(1,0,0);
 	glBegin(GL_LINES);
 	glVertex3f(0,0,0);
@@ -26,10 +28,10 @@ void drawLines(){
 	glVertex3f(0,0,6);
 	glEnd();
 	
-}
+}*/
 
 bool isInMap(float x,float y){
-	if(x >=0 && y<0){
+	/*if(x >=0 && y<0){
 		if(((y+Y_MAX_NEG)*X_MAX_POS-Y_MAX_NEG*x)<0){
 			return false;
 		}
@@ -48,7 +50,7 @@ bool isInMap(float x,float y){
 		if(X_MAX_NEG*y+Y_MAX_NEG*(x+X_MAX_NEG)<0){
 			return false;
 		}
-	}
+	}*/
 	return true;
 }
 
@@ -108,56 +110,6 @@ void chooseRandomXYBox(){
 	}
 }
 
-void drawBox(){
-	//glColor3f(0.5,0.5,0.2);
-	//chooseRandomXYBox();
-	//printf("drawBox X:%f,Y:%f\n",boxX,boxY);
-	//glScalef(3,3,3);
-	glTranslatef(boxX,boxY,0);
-	
-	glPushMatrix();
-	//glRotatef(90,1,0,0);
-	//glTranslatef(0,1,0);
-	//glColor3f(1,1,1);
-	//printf("%i\n",openBox);
-	/*if(openBox==1){
-	glColor3f(1,1,1);
-	glPushMatrix();
-	glRotatef(90,1,0,0);
-	glScalef(2.2,0.5,1);
-	glutSolidCube(0.2);
-	glPopMatrix();
-	glutPostRedisplay();
-	}
-	else{*/
-		glColor3f(1,0.5,0.2);
-		glPushMatrix();
-		if(boxFlag==1){
-			glColor3f(1,1,1);
-			glTranslatef(-0.2,0,0);
-		}
-		glutSolidCube(0.2);
-		glPopMatrix();
-		glPushMatrix();
-		if(boxFlag==1){
-			glColor3f(1,1,1);
-			glTranslatef(.2,0,0);
-			
-		}
-		
-		glutSolidCube(0.2);
-		glPopMatrix();
-		//glutPostRedisplay();
-	//}
-	//glColor3f(0.5,0.5,0.2);
-	/*glPushMatrix();
-	glScalef(3,1.2,1.8);
-	glutSolidCube(0.2);
-	glPopMatrix();*/
-	glPopMatrix();
-	
-}
-
 void chooseRandomXYDiamond(){
 	int znakX,znakY;
 	float rx,ry,dr;
@@ -207,4 +159,17 @@ void chooseRandomXYDiamond(){
 	}
 }
 
-
+bool isCollision(){
+	if(fabs(horisontal-diamondX)<0.3 && fabs(vertical-diamondY)<0.3){
+		diamondX=diamondY=-500;
+		chooseRandomXYDiamond();
+		brPoeni++;
+		printf("Poeni:%i\n",brPoeni);
+		//drawDiamond();
+		
+		if(brPoeni==6){
+			return true;
+		}
+	}
+	return false;
+}
