@@ -37,3 +37,6 @@ void drawLines();
 bool isInMap(float x,float y);
 bool kolizija(float x1,float y1,float x2,float y2);
 void drawBox();
+
+//indikator
+int indikator,preind;

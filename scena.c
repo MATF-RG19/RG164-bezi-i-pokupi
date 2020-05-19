@@ -38,7 +38,7 @@ bool ongoing=false;
 int main(int argc,char** argv){
 	brPoeni=0;
 	boxFlag=-1;
-	openBox=0;
+	indikator=-1,preind=-1;
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(512,512);
@@ -70,14 +70,14 @@ static void onDisplay(void){
 	//ispis("Bilo koja poruka");
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//pocetak inicijalizacije svetla
-	/*GLfloat light_position[] = { 0, 0, 1, 0 };
+	GLfloat light_position[] = { 0, 0, 1, 0 };
     GLfloat light_ambient[] = { 0, 0, 0, 1 };
     GLfloat light_diffuse[] = { 1, 1, 1, 1 };
-    GLfloat light_specular[] = { 0.2, 0.2, 0.2, 1 };*/
+    GLfloat light_specular[] = { 0.2, 0.2, 0.2, 1 };
     //kraj inicijalizacije svetla
 
     
-    /*GLfloat ambient_coeffs[] = { 0.3, 0.3, 0.7, 1 };
+    GLfloat ambient_coeffs[] = { 0.3, 0.3, 0.7, 1 };
 
    
     GLfloat diffuse_coeffs[] = { 1, 1, 0, 1 };
@@ -101,26 +101,16 @@ static void onDisplay(void){
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular_coeffs);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
-    glShadeModel(GL_FLAT);*/
+    glShadeModel(GL_FLAT);
 	
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    /*gluLookAt(
-            0, 0, 3,
-            -0.1, -0.1, 0,
-            0, 0, -1
-        );*/
+    
     gluLookAt(
             0, 0, 3,
             -0.1, -0.1, 0,
             0, 0, -1
         );
-	//if(boxFlag==1)
-		//drawBox();
-		//u onDisplay ne sme da stoji drawBox
-	/*if((zivot<3 && zivot>0) || zivot==3)
-		glutTimerFunc(BOX_INTERVAL,onTimer,BOX_TIMER);*/
-	//drawBox();
 	if(zivot==1){
 		//boxX=boxY=0;
 		glPushMatrix();
@@ -148,11 +138,11 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 27:
 			exit(0);
 			break;
-		/*case 'g':
-		case 'G':*/
 		case 'w':
 		case 'W':
 			//GORE
+			preind=indikator;
+			indikator=4;
 			rukeFlag*=-1;
 			vertical+=KORAK_IGRACA;
 			if(isCollision()){
@@ -163,6 +153,8 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 's':
 		case 'S':
 			//DOLE
+			preind=indikator;
+			indikator=2;
 			rukeFlag*=-1;
 			vertical-=KORAK_IGRACA;
 			if(isCollision()){
@@ -173,6 +165,8 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'a':
 		case 'A':
 			//LEVO
+			preind=indikator;
+			indikator=1;
 			rukeFlag*=-1;
 			horisontal-=KORAK_IGRACA;
 			
@@ -184,6 +178,8 @@ static void onKeyboard(unsigned char key,int x,int y){
 		case 'd':
 		case 'D':
 			//DESNO
+			preind=indikator;
+			indikator=3;
 			rukeFlag*=-1;
 			horisontal+=KORAK_IGRACA;
 			if(isCollision()){
@@ -194,6 +190,7 @@ static void onKeyboard(unsigned char key,int x,int y){
 		default:
 			break;
 	}
+	printf("Ind %i,Pre %i\n",indikator,preind);
 	//Provera za svaku od strana levo desno gore dole da li se igrac nalazi jos uvek na mapi
 	//Svedeno na proveru da li tacka tj. pozicija igraca na kojoj se on trenutno nalazi pripada nekom od odgovarajucih trouglova
 	if(horisontal >=0 && vertical<0){
@@ -220,9 +217,23 @@ static void onKeyboard(unsigned char key,int x,int y){
 			vertical=0;
 		}
 	}
-	
+	/*if(preind!=-1){
+		switch(preind-indikator){
+			case 0:movePlayer();break;
+			case 1:
+				case -3:glPushMatrix();glRotatef(-90,0,vertical,0);movePlayer();glPopMatrix();break;
+			case 2:
+				case -2:glPushMatrix();glRotatef(180,0,vertical,0);movePlayer();glPopMatrix();break;
+			case -1:
+				case 3:glPushMatrix();glRotatef(90,0,vertical,0);movePlayer();glPopMatrix();break;
+			default: break;
+		} 
+	}
+	else {
+		movePlayer();
+		} *///premestiti uraditi nesto sa ovim zbog rotacije i boljeg prikaza kod kretanja
 	movePlayer();
-	printf("%f %f\n",horisontal,vertical);
+	//printf("%f %f\n",horisontal,vertical);
 }
 	
 static void onReshape(int width,int height){
@@ -239,11 +250,22 @@ static void onReshape(int width,int height){
 static void drawPlayer(){
 	GLUquadric* levaNoga=gluNewQuadric();
 	GLUquadric* desnaNoga=gluNewQuadric();
-	//glScalef(3,3,3);//pomocno skaliranje
+	GLUquadric* levaNogaD=gluNewQuadric();
+	GLUquadric* desnaNogaD=gluNewQuadric();
+	/*if(vertical>0){
+		glPushMatrix();
+		glRotatef(45,1,0,0);
+		glPopMatrix();
+	}*/
+	
+	//glPushMatrix();//za indikatore
+	
+	glScalef(1.5,1.5,1.5);//pomocno skaliranje
 	glTranslatef(horisontal,vertical,0);
 	glPushMatrix();//cela figura
 	glPushMatrix();//podnozje
 	glPushMatrix();//jedna noga
+	glPushMatrix();//gornji deo 
 	glRotatef(35*rukeFlag,1,0,0);
 	glTranslatef(-0.1,-0.1,0);
 	glRotatef(180,0,1,0);
@@ -251,8 +273,25 @@ static void drawPlayer(){
 	glRotatef(90,0,0,1);
 	glRotatef(90,0,1,0);
 	gluCylinder(desnaNoga,0.035,0.035,0.22,20,20);
+	glPopMatrix();//gornji deo
+	glPushMatrix();//donji deo 
+	glRotatef(-45*rukeFlag,1,0,0);
+	glTranslatef(-0.1,-0.2,0);
+	glRotatef(180,0,1,0);
+	glRotatef(180,1,0,0);
+	glRotatef(90,0,0,1);
+	glRotatef(90,0,1,0);
+	glColor3f(1,1,1);
+	gluCylinder(desnaNogaD,0.035,0.035,0.22,20,20);
+	glPopMatrix();//donji deo 
+	glPushMatrix();
+	glColor3f(1,0.7,0.7);
+	glTranslatef(-0.15,-0.3,0);
+	glutSolidSphere(0.1,20,20);
+	glPopMatrix();
 	glPopMatrix();//kraj jedne noge
 	glPushMatrix();//druga noga
+	glPushMatrix();//gornji deo druge noge
 	glRotatef(-35*rukeFlag,1,0,0);
 	glTranslatef(0.1,-0.1,0);
 	glRotatef(180,0,1,0);
@@ -261,11 +300,22 @@ static void drawPlayer(){
 	glRotatef(90,0,1,0);
 	
 	gluCylinder(levaNoga,0.035,0.035,0.22,20,20);
+	glPopMatrix();//gornji deo druge noge
+	glPushMatrix();//donji deo druge noge
+	glRotatef(45*rukeFlag,1,0,0);
+	glTranslatef(0.1,-0.2,0);
+	glRotatef(180,0,1,0);
+	glRotatef(180,1,0,0);
+	glRotatef(90,0,0,1);
+	glRotatef(90,0,1,0);
+	glColor3f(1,1,1);
+	gluCylinder(levaNogaD,0.035,0.035,0.22,20,20);
+	glPopMatrix();//donji deo druge noge
 	glPopMatrix();//kraj druge noge
 	glPopMatrix();//kraj podnozja
 	glColor3f(1,0,0);
 	glPushMatrix();//glava
-	glTranslatef(0,0.2,0);
+	glTranslatef(0,0.3,0);
 	glutSolidSphere(0.1,100,100);
 	glPopMatrix();//kraj glave
 	glPushMatrix();//telo
@@ -273,14 +323,17 @@ static void drawPlayer(){
 	GLUquadric* levaRuka=gluNewQuadric();
 	GLUquadric* desnaRuka=gluNewQuadric();
 	glPushMatrix();//leva ruka
-	glRotatef(15,0,0,1);
-	glTranslatef(0.1,0,0);
+	glTranslatef(0.18,0.1,0);
+	glRotatef(-45,0,0,1);
+	
+	//glRotatef(30,1,0,0);
 	glRotatef(90,0,1,0);
 	gluCylinder(levaRuka,0.035,0.035,0.22,20,20);
 	glPopMatrix();//kraj leve ruke
 	glPushMatrix();//desna ruka
-	glTranslatef(-0.3,0,0);
-	glRotatef(90,0,1,0);
+	glTranslatef(-0.18,0.1,0);
+	glRotatef(-45,0,0,1);
+	
 	gluCylinder(desnaRuka,0.035,0.035,0.22,20,20);
 	glPopMatrix();//kraj desne ruke
 	rukeFlag=!rukeFlag;
@@ -288,10 +341,11 @@ static void drawPlayer(){
 	//glavni deo tela
 	glColor3f(1,1,0);
 	glScalef(0.3,0.3,0.3);
-	glutSolidSphere(0.5,20,20);
+	glutSolidSphere(0.6,20,20);
 	//kraj glavnog dela tela
 	glPopMatrix();//kraj tela
 	glPopMatrix();//kraj cele figure
+	//glPopMatrix();//za indikatore
 	
 }
 

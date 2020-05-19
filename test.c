@@ -111,7 +111,7 @@ void chooseRandomXYBox(){
 void drawBox(){
 	//glColor3f(0.5,0.5,0.2);
 	//chooseRandomXYBox();
-	printf("drawBox X:%f,Y:%f\n",boxX,boxY);
+	//printf("drawBox X:%f,Y:%f\n",boxX,boxY);
 	//glScalef(3,3,3);
 	glTranslatef(boxX,boxY,0);
 	
