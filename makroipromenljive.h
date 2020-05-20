@@ -10,10 +10,10 @@
 #define DRUKA_TIMER 2
 #define BOX_TIMER 3
 
-/*#define X_MAX_POS 3.57
-#define Y_MAX_NEG 3.93
-#define Y_MAX_POS 3.48
-#define X_MAX_NEG 4.02*/
+#define X_MAX_POS 0.83
+#define Y_MAX_NEG 4.93
+#define Y_MAX_POS 2.68
+#define X_MAX_NEG 4.93
 
 #define KORAK_IGRACA 0.025
 #define RUNNER_INTERVAL 2500
@@ -22,6 +22,10 @@
 #define RUNNER_POC -15
 
 #define SIZE 900
+
+#define RAZLAZ 500
+
+float gdx,gdy,glx,gly,dlx,dly,ddx,ddy;
 
 float diamondX,diamondY;
 
@@ -43,3 +47,9 @@ float runnerX,runnerY;
 bool ongoing;
 
 int indikator,preind;
+
+bool isWin;
+
+float animationParameter;
+
+

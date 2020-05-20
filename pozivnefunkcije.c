@@ -49,10 +49,19 @@ void onDisplay(void){
 	glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    gluLookAt(
-            0, 0, 3,
+    /*if(isWin){
+    	glutTimerFunc(10,onTimer,1);
+    }*/
+    
+    /*gluLookAt(
+            0, 0, 3-animationParameter,
             -0.1, -0.1, 0,
             0, 0, -1
+        );*/
+    gluLookAt(
+            -1, -1, 0.3,
+            0, 0, 0,
+            1, 1, 0
         );
 	if(zivot==1){
 		//boxX=boxY=0;
@@ -61,7 +70,27 @@ void onDisplay(void){
 		drawBox();
 		glPopMatrix();
 	}
-	//drawLines();
+	/*glColor3f(1,1,0);
+	glBegin(GL_LINES);
+	glVertex3f(gdx,gdy,0);
+	glVertex3f(glx,gly,0);//crvena je x osa
+	glEnd();
+	glColor3f(0,0,1);
+	glBegin(GL_LINES);
+	glVertex3f(glx,gly,0);
+	glVertex3f(dlx,dly,0);//crvena je x osa
+	glEnd();
+	glColor3f(1,0,1);
+	glBegin(GL_LINES);
+	glVertex3f(ddx,ddy,0);
+	glVertex3f(dlx,dly,0);//crvena je x osa
+	glEnd();
+	glColor3f(1,1,0);
+	glBegin(GL_LINES);
+	glVertex3f(gdx,gdy,0);
+	glVertex3f(ddx,ddy,0);//crvena je x osa
+	glEnd();*/
+	drawLines();
 	drawDiamond();
 	drawRunner();
 	drawPlayer();
@@ -90,8 +119,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			vertical+=KORAK_IGRACA;
 			horisontal+=KORAK_IGRACA;
 			if(isCollision()){
-				printf("Pobeda!\n");
-				exit(0);
+				isWin=true;
 			}
 			break;
 		case 's':
@@ -103,8 +131,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			vertical-=KORAK_IGRACA;
 			horisontal-=KORAK_IGRACA;
 			if(isCollision()){
-				printf("Pobeda!\n");
-				exit(0);
+				isWin=true;
 			}
 			break;
 		case 'a':
@@ -116,8 +143,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			horisontal-=KORAK_IGRACA;
 			vertical+=KORAK_IGRACA;
 			if(isCollision()){
-				printf("Pobeda!\n");
-				exit(0);
+				isWin=true;
 			}
 			break;
 		case 'd':
@@ -129,43 +155,45 @@ void onKeyboard(unsigned char key,int x,int y){
 			horisontal+=KORAK_IGRACA;
 			vertical-=KORAK_IGRACA;
 			if(isCollision()){
-				printf("Pobeda!\n");
-				exit(0);
+				isWin=true;
 			}
 			break;
 		default:
 			break;
 	}
-	printf("Ind %i,Pre %i\n",indikator,preind);
+	//printf("Ind %i,Pre %i\n",indikator,preind);
 	//Provera za svaku od strana levo desno gore dole da li se igrac nalazi jos uvek na mapi
 	//Svedeno na proveru da li tacka tj. pozicija igraca na kojoj se on trenutno nalazi pripada nekom od odgovarajucih trouglova
-	if(horisontal >=0 && vertical<0){
-		if(((vertical+Y_MAX_NEG)*X_MAX_POS-Y_MAX_NEG*horisontal)<0){
-			horisontal=0;
-			vertical=0;
+	/*if(horisontal >=0 && vertical<0){
+		if(istaStranaPrave(gdx,gdy,ddx,ddy,RAZLAZ,-RAZLAZ)==true){
+			horisontal=vertical=-1;
 		}
 	}
 	if(horisontal>=0 && vertical>=0){
-		if(((-1*vertical*X_MAX_POS)-(Y_MAX_POS*(horisontal-X_MAX_POS)))<0){
-			horisontal=0;
-			vertical=0;
+		if(istaStranaPrave(gdx,gdy,glx,gly,RAZLAZ,RAZLAZ)==true){
+			horisontal=vertical=-1;
 		}
 	}
 	if(horisontal<0 && vertical>=0){
-		if(((-1*X_MAX_NEG*(vertical-Y_MAX_POS))+Y_MAX_POS*horisontal)<0){
-			horisontal=0;
-			vertical=0;
+		if(istaStranaPrave(gdx,gdy,glx,gly,-RAZLAZ,RAZLAZ)==true){
+			horisontal=-1;
+			vertical=-1;
 		}
 	}
 	if(horisontal<0 && vertical<0){
-		if(X_MAX_NEG*vertical+Y_MAX_NEG*(horisontal+X_MAX_NEG)<0){
-			horisontal=0;
-			vertical=0;
+		if(istaStranaPrave(gdx,gdy,glx,gly,-RAZLAZ,-RAZLAZ)==true){
+			horisontal=-1;
+			vertical=-1;
 		}
 	}
-	/* *///premestiti uraditi nesto sa ovim zbog rotacije i boljeg prikaza kod kretanja
+	*/
+	//gore || levo || dole || desno
+	
+	if(!(istaStranaPrave(gdx,gdy,glx,gly,-1,-1)==true || istaStranaPrave(glx,gly,dlx,dly,-1,-1)==true || istaStranaPrave(dlx,dly,ddx,ddy,-1,-1)==true || istaStranaPrave(ddx,ddy,gdx,gdy,-1,-1)==true))
+		horisontal=vertical=-1;
+	
 	movePlayer();
-	//printf("%f %f\n",horisontal,vertical);
+	printf("X:%f Y:%f\n",horisontal,vertical);
 }
 	
 void onReshape(int width,int height){
@@ -203,4 +231,12 @@ void onTimer(int value){
 		glutTimerFunc(BOX_INTERVAL,onTimer,BOX_TIMER);
 	}*/
 	//else return;
+	if(value!=1)
+		return;
+	if(animationParameter>=3)
+		return;
+	if(value==1){
+		animationParameter+=0.1;
+		glutTimerFunc(10,onTimer,1);
+	}
 }

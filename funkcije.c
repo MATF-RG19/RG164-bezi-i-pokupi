@@ -10,16 +10,18 @@
 #include "makroipromenljive.h"
 #include "objekti.h"
 
-/*void drawLines(){
+
+
+void drawLines(){
 	
 	glColor3f(1,0,0);
 	glBegin(GL_LINES);
-	glVertex3f(0,0,0);
+	glVertex3f(-6,0,0);
 	glVertex3f(6,0,0);//crvena je x osa
 	glEnd();
 	glColor3f(0,1,0);
 	glBegin(GL_LINES);
-	glVertex3f(0,0,0);
+	glVertex3f(0,-6,0);
 	glVertex3f(0,6,0);//zelena je y osa
 	glEnd();
 	glColor3f(0,0,1);
@@ -28,7 +30,7 @@
 	glVertex3f(0,0,6);
 	glEnd();
 	
-}*/
+}
 
 bool isInMap(float x,float y){
 	/*if(x >=0 && y<0){
@@ -173,3 +175,47 @@ bool isCollision(){
 	}
 	return false;
 }
+
+void win(){
+	return;
+}
+
+bool kolizijaPravaTacka(float x1,float y1,float x2,float y2,float X,float Y){
+	float r=0.4;
+	float k=(y2-y1)/(x2-x1);
+	float A=-1*k;
+	float B=1;
+	float C=-1*k*x1-y1;
+	float D=sqrt(A*A+B*B);
+	printf("k:%f A:%f B:%f C:%f D:%f\n",k,A,B,C,D);
+	r=fabs(A*X+B*Y+C)/D;
+	printf("r=%f\n",r);
+	if(r<0.3){
+		return true;
+	}
+	return false;
+}
+
+void inicijalizujTemena(){
+	gdx=2.9;
+	gdy=-2.8;
+	ddx=1.1;
+	ddy=-5.35;
+	dlx=-5.22;
+	dly=0.88;
+	glx=-2.95;
+	gly=3;
+	
+}
+
+bool istaStranaPrave(float x1,float y1,float x2,float y2,float x,float y){
+	if(((x2-x1)*(vertical-y1)-(y2-y1)*(horisontal-x1))<0)
+		return false;
+	if(((x1-x)*(vertical-y)-(horisontal-x)*(y1-y))<0)
+		return false;
+	if(((-x2+x)*(vertical-y2)-(-x2+horisontal)*(-y2+y))<0)
+		return false;
+	return true;
+}
+
+

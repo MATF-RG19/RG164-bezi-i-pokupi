@@ -12,12 +12,14 @@
 #include "pozivnefunkcije.h"
 
 
+
 int main(int argc,char** argv){
 	ongoing=false;
-
+	isWin=false;
+	animationParameter=0;
 	runnerX=RUNNER_POC;
 	runnerY=RUNNER_POC;
-
+	inicijalizujTemena();
 	horisontal=0;
 	vertical=0;
 	rukeFlag=1;
