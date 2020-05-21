@@ -53,16 +53,16 @@ void onDisplay(void){
     	glutTimerFunc(10,onTimer,1);
     }*/
     
-    /*gluLookAt(
-            0, 0, 3-animationParameter,
-            -0.1, -0.1, 0,
-            0, 0, -1
-        );*/
     gluLookAt(
+            0, 0, 3-animationParameter,
+            -0.1,-0.1,0,//(-0.1,-0.1,0)
+            0, 0, -1
+        );
+    /*gluLookAt(
             -1, -1, 0.3,
             0, 0, 0,
             1, 1, 0
-        );
+        );*///pomocni LookAt
 	if(zivot==1){
 		//boxX=boxY=0;
 		glPushMatrix();
@@ -70,26 +70,7 @@ void onDisplay(void){
 		drawBox();
 		glPopMatrix();
 	}
-	/*glColor3f(1,1,0);
-	glBegin(GL_LINES);
-	glVertex3f(gdx,gdy,0);
-	glVertex3f(glx,gly,0);//crvena je x osa
-	glEnd();
-	glColor3f(0,0,1);
-	glBegin(GL_LINES);
-	glVertex3f(glx,gly,0);
-	glVertex3f(dlx,dly,0);//crvena je x osa
-	glEnd();
-	glColor3f(1,0,1);
-	glBegin(GL_LINES);
-	glVertex3f(ddx,ddy,0);
-	glVertex3f(dlx,dly,0);//crvena je x osa
-	glEnd();
-	glColor3f(1,1,0);
-	glBegin(GL_LINES);
-	glVertex3f(gdx,gdy,0);
-	glVertex3f(ddx,ddy,0);//crvena je x osa
-	glEnd();*/
+	
 	drawLines();
 	drawDiamond();
 	drawRunner();
@@ -164,35 +145,54 @@ void onKeyboard(unsigned char key,int x,int y){
 	//printf("Ind %i,Pre %i\n",indikator,preind);
 	//Provera za svaku od strana levo desno gore dole da li se igrac nalazi jos uvek na mapi
 	//Svedeno na proveru da li tacka tj. pozicija igraca na kojoj se on trenutno nalazi pripada nekom od odgovarajucih trouglova
-	/*if(horisontal >=0 && vertical<0){
-		if(istaStranaPrave(gdx,gdy,ddx,ddy,RAZLAZ,-RAZLAZ)==true){
+	if(horisontal >=0 && vertical<0){
+		if(istaStranaPrave(0,-4.4,1.2,0,0,0)==false){
+			if(istaStranaPrave(0,-4.4,gdx,gdy,ddx,ddy)==false && istaStranaPrave(0,-4.3,1.3,0,gdx,gdy)==false /*&& istaStranaPrave(0,-4.37,1.13,0,gdx,gdy)==false*/)
+				
 			horisontal=vertical=-1;
 		}
 	}
 	if(horisontal>=0 && vertical>=0){
-		if(istaStranaPrave(gdx,gdy,glx,gly,RAZLAZ,RAZLAZ)==true){
+		if(istaStranaPrave(1.13,0,0,1.23,0,0)==false){
 			horisontal=vertical=-1;
 		}
 	}
 	if(horisontal<0 && vertical>=0){
-		if(istaStranaPrave(gdx,gdy,glx,gly,-RAZLAZ,RAZLAZ)==true){
+		if(istaStranaPrave(glx,gly,dlx,dly,-1,-1)==false){//-1.2,0
 			horisontal=-1;
 			vertical=-1;
 		}
 	}
 	if(horisontal<0 && vertical<0){
-		if(istaStranaPrave(gdx,gdy,glx,gly,-RAZLAZ,-RAZLAZ)==true){
+		if(istaStranaPrave(-4.42,0,0,-4.37,0,0)==false){
 			horisontal=-1;
 			vertical=-1;
 		}
 	}
-	*/
+	
 	//gore || levo || dole || desno
 	
-	if(!(istaStranaPrave(gdx,gdy,glx,gly,-1,-1)==true || istaStranaPrave(glx,gly,dlx,dly,-1,-1)==true || istaStranaPrave(dlx,dly,ddx,ddy,-1,-1)==true || istaStranaPrave(ddx,ddy,gdx,gdy,-1,-1)==true))
-		horisontal=vertical=-1;
+	
+	if(preind!=-1)
+		switch(preind-indikator){
+		//case 0:break;
+		case 1:
+		case -3:ugao+=-90;break;
+		case 2:
+		case -2:ugao+=180;break;
+		case -1:
+		case 3:ugao+=90;break;
+		default: break;
+		} 
+	else switch(indikator){
+		case 1:ugao=-90;break;
+		case 2:ugao=0;break;
+		case 3:ugao=90;break;
+		case 4: ugao=180;break;
+		} 
 	
 	movePlayer();
+	
 	printf("X:%f Y:%f\n",horisontal,vertical);
 }
 	

@@ -23,8 +23,6 @@
 
 #define SIZE 900
 
-#define RAZLAZ 500
-
 float gdx,gdy,glx,gly,dlx,dly,ddx,ddy;
 
 float diamondX,diamondY;

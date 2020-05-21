@@ -180,7 +180,7 @@ void win(){
 	return;
 }
 
-bool kolizijaPravaTacka(float x1,float y1,float x2,float y2,float X,float Y){
+/*bool kolizijaPravaTacka(float x1,float y1,float x2,float y2,float X,float Y){
 	float r=0.4;
 	float k=(y2-y1)/(x2-x1);
 	float A=-1*k;
@@ -194,7 +194,7 @@ bool kolizijaPravaTacka(float x1,float y1,float x2,float y2,float X,float Y){
 		return true;
 	}
 	return false;
-}
+}*/	//verovatno nepotrebna funkcija
 
 void inicijalizujTemena(){
 	gdx=2.9;

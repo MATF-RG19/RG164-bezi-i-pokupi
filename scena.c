@@ -14,21 +14,22 @@
 
 
 int main(int argc,char** argv){
+	ugao=0;
 	ongoing=false;
 	isWin=false;
 	animationParameter=0;
 	runnerX=RUNNER_POC;
 	runnerY=RUNNER_POC;
 	inicijalizujTemena();
-	horisontal=0;
-	vertical=0;
+	horisontal=-1;
+	vertical=-1;
 	rukeFlag=1;
 	brPoeni=0;
 	boxFlag=-1;
 	indikator=-1,preind=-1;
 	glutInit(&argc,argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-	glutInitWindowSize(SIZE,SIZE+SIZE/5);
+	glutInitWindowSize(SIZE,SIZE);
 	glutInitWindowPosition(100,100);
 	
 	glutCreateWindow("Bezi i pokupi");
