@@ -28,3 +28,5 @@ void inicijalizujTemena();
 bool istaStranaPrave(float x1,float y1,float x2,float y2,float x,float y);
 
 bool uKvadratu();
+
+void drawLine(float x1,float y1,float x2,float y2);//pomocna funkcija za iscrtavanje linija

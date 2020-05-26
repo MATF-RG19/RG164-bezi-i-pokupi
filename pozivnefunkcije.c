@@ -10,7 +10,7 @@
 
 #include "objekti.h"
 
-void onDisplay(void){
+void onDisplay(void){//callback funkcija za prikazivanje
 	//Ciscenje bafera
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	//pocetak inicijalizacije svetla
@@ -70,7 +70,13 @@ void onDisplay(void){
 		drawBox();
 		glPopMatrix();
 	}
-	
+	glColor3f(1,1,0);
+		drawLine(1.2,0,0,0);
+		drawLine(0,-4.4,1.2,0);
+		drawLine(0,-4.4,ddx,ddy);
+		drawLine(0,-4.4,1.3,0);
+		drawLine(1.3,0,gdx,gdy);
+		drawLine(0,-4.4,gdx,gdy);
 	drawLines();
 	drawDiamond();
 	drawRunner();
@@ -145,28 +151,28 @@ void onKeyboard(unsigned char key,int x,int y){
 	//printf("Ind %i,Pre %i\n",indikator,preind);
 	//Provera za svaku od strana levo desno gore dole da li se igrac nalazi jos uvek na mapi
 	//Svedeno na proveru da li tacka tj. pozicija igraca na kojoj se on trenutno nalazi pripada nekom od odgovarajucih trouglova
+		
 	if(horisontal >=0 && vertical<0){
-		if(istaStranaPrave(0,-4.4,1.2,0,0,0)==false){
-			if(istaStranaPrave(0,-4.4,gdx,gdy,ddx,ddy)==false && istaStranaPrave(0,-4.3,1.3,0,gdx,gdy)==false /*&& istaStranaPrave(0,-4.37,1.13,0,gdx,gdy)==false*/)
-				
-			horisontal=vertical=-1;
+		
+		if(istaStranaPrave(0,0,0,-4.6,3.9,0.6)==false){
+			horisontal=vertical=0;
 		}
 	}
 	if(horisontal>=0 && vertical>=0){
-		if(istaStranaPrave(1.13,0,0,1.23,0,0)==false){
-			horisontal=vertical=-1;
+		if(istaStranaPrave(3.5,0,0,3.5,0,0)==false){
+			horisontal=vertical=0;
 		}
 	}
 	if(horisontal<0 && vertical>=0){
-		if(istaStranaPrave(glx,gly,dlx,dly,-1,-1)==false){//-1.2,0
-			horisontal=-1;
-			vertical=-1;
+		if(istaStranaPrave(-4.6,0,0,0,0.33,3.68)==false){//-1.2,0
+			horisontal=0;
+			vertical=0;
 		}
 	}
 	if(horisontal<0 && vertical<0){
 		if(istaStranaPrave(-4.42,0,0,-4.37,0,0)==false){
-			horisontal=-1;
-			vertical=-1;
+			horisontal=0;
+			vertical=0;
 		}
 	}
 	

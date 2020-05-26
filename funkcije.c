@@ -218,4 +218,10 @@ bool istaStranaPrave(float x1,float y1,float x2,float y2,float x,float y){
 	return true;
 }
 
+void drawLine(float x1,float y1,float x2,float y2){
+	glBegin(GL_LINES);
+	glVertex3f(x1,y1,0);
+	glVertex3f(x2,y2,0);
+	glEnd();
+}
 
