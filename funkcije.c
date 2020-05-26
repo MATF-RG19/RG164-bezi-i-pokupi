@@ -1,3 +1,5 @@
+//fajl koji implementira funkcije iz funkcije.h
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/glut.h>
@@ -11,7 +13,7 @@
 #include "objekti.h"
 
 
-
+//pomocna funkcija za iscrtavanje koordinatnih osa
 void drawLines(){
 	
 	glColor3f(1,0,0);

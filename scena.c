@@ -14,6 +14,7 @@
 
 
 int main(int argc,char** argv){
+	//inicjalizacija promenljivih
 	ugao=0;
 	ongoing=false;
 	isWin=false;
@@ -21,8 +22,8 @@ int main(int argc,char** argv){
 	runnerX=RUNNER_POC;
 	runnerY=RUNNER_POC;
 	inicijalizujTemena();
-	horisontal=-1;
-	vertical=-1;
+	horisontal=0;
+	vertical=0;
 	rukeFlag=1;
 	brPoeni=0;
 	boxFlag=-1;
@@ -39,7 +40,7 @@ int main(int argc,char** argv){
 	//printf("BOX X:%f,Y:%f\n",boxX,boxY);
 	//printf("Runner interval%i\n",RUNNER_INTERVAL);
 	//chooseRandomXYBox();
-	zivot=1;
+	zivot=3;
 	chooseRandomXYBox();
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(onReshape);

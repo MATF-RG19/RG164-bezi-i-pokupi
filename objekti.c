@@ -1,3 +1,5 @@
+//fajl koji implementira funkcije iz objekti.h
+
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <stdio.h>
@@ -8,25 +10,16 @@
 //#include "funkcije.h"
 #include "makroipromenljive.h"
 
-
+//funkcija za iscrtavanje glavnog igraca
 void drawPlayer(){
 	GLUquadric* levaNoga=gluNewQuadric();
 	GLUquadric* desnaNoga=gluNewQuadric();
-	/*GLUquadric* levaNogaD=gluNewQuadric();
-	GLUquadric* desnaNogaD=gluNewQuadric();*/
 	GLUquadric* levaRuka=gluNewQuadric();
 	GLUquadric* desnaRuka=gluNewQuadric();
-	/*if(vertical>0){
-		glPushMatrix();
-		glRotatef(45,1,0,0);
-		glPopMatrix();
-	}*/
 	
-	
-	//printf("Ind %i Pre %i Ugao %f\n",indikator,preind,ugao);
 	glScalef(1+animationParameter,1+animationParameter,1+animationParameter);//pomocno skaliranje
 	
-	//glRotatef(22,0,0,1);
+	
 	glPushMatrix();//glavna translacija
 	
 	glTranslatef(horisontal,vertical,0);
@@ -157,12 +150,13 @@ void drawRunner(){
 	glColor3f(0,0,1);
 	glPushMatrix();
 	glTranslatef(runnerX,runnerY,0);
+	glRotatef(90,1,0,0);
 	GLUquadric* levaNoga=gluNewQuadric();
 	GLUquadric* desnaNoga=gluNewQuadric();
-	glScalef(3,3,3);//pomocno skaliranje
+	//glScalef(3,3,3);//pomocno skaliranje
 	runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA;
 	runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA;
-	//printf("Runner: %f,%f\n",runnerX,runnerY);
+	printf("Runner: %f,%f\n",runnerX,runnerY);
 	glPushMatrix();//cela figura
 	glPushMatrix();//podnozje
 	glPushMatrix();//jedna noga
@@ -174,6 +168,7 @@ void drawRunner(){
 	glRotatef(90,0,1,0);
 	gluCylinder(desnaNoga,0.035,0.035,0.22,20,20);
 	glPopMatrix();//kraj jedne noge
+	
 	glPushMatrix();//druga noga
 	glRotatef(-35*rukeFlag,1,0,0);
 	glTranslatef(0.1,-0.1,0);
@@ -205,8 +200,7 @@ void drawRunner(){
 	gluCylinder(desnaRuka,0.035,0.035,0.22,20,20);
 	glPopMatrix();//kraj desne ruke
 	rukeFlag=!rukeFlag;
-	//printf("%i\n",rukeFlag);
-	//glavni deo tela
+	
 	glColor3f(1,1,0);
 	glScalef(0.3,0.3,0.3);
 	glutSolidSphere(0.5,20,20);

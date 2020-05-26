@@ -1,3 +1,5 @@
+//heder za deklaraciju promenljivih, definiciju konstanti, koriscenih u programu
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <GL/glut.h>
@@ -19,7 +21,7 @@
 #define RUNNER_INTERVAL 2500
 #define BOX_INTERVAL 1000
 
-#define RUNNER_POC -15
+#define RUNNER_POC -6
 
 #define SIZE 900
 

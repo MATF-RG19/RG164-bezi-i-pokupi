@@ -1,3 +1,5 @@
+//fajl koji implementira funkcije iz pozivnefunkcije.h
+
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <stdio.h>
@@ -77,7 +79,11 @@ void onDisplay(void){//callback funkcija za prikazivanje
 	if(kolizija(horisontal,vertical,boxX,boxY)){
 		boxFlag=1;
 	}
-	//if(kolizija(horisontal,vertical,runnerX,runnerY))zivot--;
+	if(kolizija(horisontal,vertical,runnerX,runnerY)){
+		
+		runnerX=runnerY=RUNNER_POC/2;
+		zivot--;
+	}
 	if(zivot==0){
 		printf("izgubili ste\n");
 		exit(0);
