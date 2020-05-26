@@ -30,10 +30,29 @@ void drawPlayer(){
 	glPushMatrix();//glavna translacija
 	
 	glTranslatef(horisontal,vertical,0);
-	if(horisontal<-1.1){
-		glScalef(1+horisontal/20,1+horisontal/20,1+horisontal/20);
+	
+	if(vertical<0){
+		glRotatef(-(30+-1*vertical*2),1,0,0);
+	}
+	
+	if(horisontal<-1.1 && vertical>0){
+		glScalef((1+horisontal/20),(1+horisontal/20),(1+horisontal/20));
 		glRotatef(horisontal*-10,0,1,0);
 	}
+	
+	if(horisontal>1.1){
+		glScalef((1+horisontal/20),(1+horisontal/20),(1+horisontal/20));
+		glRotatef(horisontal*-10,0,1,0);
+	}
+	
+	if(vertical>2){
+		glScalef(2/vertical,2/vertical,2/vertical);
+	}
+	
+	if(vertical<-3){
+		glScalef(-3/vertical,-3/vertical,-3/vertical);
+	}
+	
 	glRotatef(-30,0,0,1);//ispravljanje levo-desno
 	glPushMatrix();//rotacija za ugao
 	glRotatef(ugao,0,0,1);

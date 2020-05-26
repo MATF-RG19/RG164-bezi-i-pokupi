@@ -70,13 +70,6 @@ void onDisplay(void){//callback funkcija za prikazivanje
 		drawBox();
 		glPopMatrix();
 	}
-	glColor3f(1,1,0);
-		drawLine(1.2,0,0,0);
-		drawLine(0,-4.4,1.2,0);
-		drawLine(0,-4.4,ddx,ddy);
-		drawLine(0,-4.4,1.3,0);
-		drawLine(1.3,0,gdx,gdy);
-		drawLine(0,-4.4,gdx,gdy);
 	drawLines();
 	drawDiamond();
 	drawRunner();
