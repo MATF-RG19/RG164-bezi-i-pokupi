@@ -98,12 +98,9 @@ void drawPlayer(){
 	glRotatef(-90,0,1,0);
 	gluCylinder(desnaRuka,0.035,0.035,0.22,20,20);
 	glPopMatrix();//kraj desne ruke
-	
-	
 	glPushMatrix();//telo
 	glColor3f(0,1,0);
 	rukeFlag=!rukeFlag;
-	//printf("%i\n",rukeFlag);
 	//glavni deo tela
 	glColor3f(1,1,0);
 	glScalef(0.3,0.3,0.3);
@@ -119,18 +116,96 @@ void drawPlayer(){
 	
 }
 
+//funkcija za kretanje igraca
 void movePlayer(){
 	drawPlayer();
 	
 	glutPostRedisplay();
 }
 
+bool isInMap(float x,float y){
+	if(x >=0 && y<0){
+		if(((y+Y_MAX_NEG)*X_MAX_POS-Y_MAX_NEG*x)<0){
+			return false;
+		}
+	}
+	if(x>=0 && y>=0){
+		if(((-1*y*X_MAX_POS)-(Y_MAX_POS*(x-X_MAX_POS)))<0){
+			return false;
+		}
+	}
+	if(x<0 && y>=0){
+		if(((-1*X_MAX_NEG*(y-Y_MAX_POS))+Y_MAX_POS*x)<0){
+			return false;
+		}
+	}
+	if(x<0 && y<0){
+		if(X_MAX_NEG*y+Y_MAX_NEG*(x+X_MAX_NEG)<0){
+			return false;
+		}
+	}
+	return true;
+}
+
+
+void chooseRandomXYDiamond(){
+	int znakX,znakY;
+	float rx,ry,dr;
+	while(!isInMap(diamondX,diamondY)){
+	srand(time(NULL));
+	rx=rand()%4;
+	ry=rand()%4;
+	dr=(((float)(rand()%1000))/1000);
+		//printf("rovi je %f,%f,%f\n",rx,ry,dr);
+	
+	switch(brPoeni%4){
+		case 0:
+			znakX=1;
+			znakY=1;
+			break;
+		case 1:
+			znakX=1;
+			znakY=-1;
+			break;
+		case 2:
+			znakX=-1;
+			znakY=-1;
+			break;
+		case 3:
+			znakX=-1;
+			znakY=1;
+			break;
+	}
+		if(rx==3){
+			diamondX=znakX*rx-znakX*dr;
+			if(ry==3){
+				diamondY=znakY*ry-znakY*dr;
+			}
+			else {
+				diamondY=znakY*ry+znakY*dr;
+			}
+		}
+		else if(ry==3){
+			diamondY=znakY*ry-znakY*dr;
+			diamondX=znakX*rx+znakX*dr;
+		}
+		else{
+			diamondX=znakX*rx+znakX*dr;
+			diamondY=znakY*ry+znakY*dr;
+		}
+		printf("DX:%f,DY:%f\n",diamondX,diamondY);
+	}
+}
+
+//funkcija za iscrtavanje diamonda
 void drawDiamond(){
 	//GLUquadric *diamond=gluNewQuadric()
 	//glutSolidOctahedron();
+	chooseRandomXYDiamond();
 	glColor3f(1,0.3,0.3);
 	glPushMatrix();//pocetak za ceo diamond
 	glTranslatef(diamondX,diamondY,0);
+	glRotatef(90,1,0,0);
 	glPushMatrix();//pocetak za prvi diamond
 	glTranslatef(-0.1,0,0);
 	glRotatef(180,0,1,0);
@@ -156,7 +231,7 @@ void drawRunner(){
 	//glScalef(3,3,3);//pomocno skaliranje
 	runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA;
 	runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA;
-	printf("Runner: %f,%f\n",runnerX,runnerY);
+	
 	glPushMatrix();//cela figura
 	glPushMatrix();//podnozje
 	glPushMatrix();//jedna noga
@@ -208,7 +283,7 @@ void drawRunner(){
 	glPopMatrix();//kraj tela
 	glPopMatrix();//kraj cele figure
 	glPopMatrix();
-	//glutTimerFunc(RUNNER_INTERVAL,onTimer,RUNNER_TIMER);
+
 }
 
 void drawBox(){
@@ -260,3 +335,5 @@ void drawBox(){
 	glPopMatrix();
 	
 }
+
+

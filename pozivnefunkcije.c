@@ -76,9 +76,11 @@ void onDisplay(void){//callback funkcija za prikazivanje
 	drawDiamond();
 	drawRunner();
 	drawPlayer();
-	if(kolizija(horisontal,vertical,boxX,boxY)){
-		boxFlag=1;
+	if(kolizija(horisontal,vertical,diamondX,diamondY)){
+		brPoeni++;
+		drawDiamond();
 	}
+	
 	if(kolizija(horisontal,vertical,runnerX,runnerY)){
 		
 		runnerX=runnerY=RUNNER_POC/2;
@@ -105,7 +107,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			vertical+=KORAK_IGRACA;
 			horisontal+=KORAK_IGRACA;
 			if(isCollision()){
-				isWin=true;
+				printf("Pobeda\n");
 			}
 			break;
 		case 's':
@@ -117,7 +119,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			vertical-=KORAK_IGRACA;
 			horisontal-=KORAK_IGRACA;
 			if(isCollision()){
-				isWin=true;
+				printf("Pobeda\n");
 			}
 			break;
 		case 'a':
@@ -129,7 +131,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			horisontal-=KORAK_IGRACA;
 			vertical+=KORAK_IGRACA;
 			if(isCollision()){
-				isWin=true;
+				printf("Pobeda\n");
 			}
 			break;
 		case 'd':
@@ -141,7 +143,7 @@ void onKeyboard(unsigned char key,int x,int y){
 			horisontal+=KORAK_IGRACA;
 			vertical-=KORAK_IGRACA;
 			if(isCollision()){
-				isWin=true;
+				printf("Pobeda\n");
 			}
 			break;
 		default:
@@ -195,6 +197,8 @@ void onKeyboard(unsigned char key,int x,int y){
 		case 3:ugao=90;break;
 		case 4: ugao=180;break;
 		} 
+	
+	
 	
 	movePlayer();
 	

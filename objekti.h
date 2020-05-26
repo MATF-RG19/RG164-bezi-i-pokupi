@@ -8,6 +8,10 @@
 //#include "funkcije.h"
 #include "makroipromenljive.h"
 
+bool isInMap(float x,float y);
+
+void chooseRandomXYDiamond();
+
 void drawPlayer();
 
 void movePlayer();
@@ -17,3 +21,5 @@ void drawDiamond();
 void drawRunner();
 
 void drawBox();
+
+

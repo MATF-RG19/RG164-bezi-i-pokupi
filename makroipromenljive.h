@@ -25,6 +25,8 @@
 
 #define SIZE 900
 
+int dFlag;
+
 float gdx,gdy,glx,gly,dlx,dly,ddx,ddy;
 
 float diamondX,diamondY;

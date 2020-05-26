@@ -1,3 +1,5 @@
+//fajl za glavnu funkciju
+
 #include <stdlib.h>
 #include <GL/glut.h>
 #include <stdio.h>
@@ -15,6 +17,7 @@
 
 int main(int argc,char** argv){
 	//inicjalizacija promenljivih
+	dFlag=0;
 	ugao=0;
 	ongoing=false;
 	isWin=false;
@@ -36,18 +39,16 @@ int main(int argc,char** argv){
 	glutCreateWindow("Bezi i pokupi");
 	
 	diamondX=-500,diamondY=-500;
-	chooseRandomXYDiamond();
-	//printf("BOX X:%f,Y:%f\n",boxX,boxY);
-	//printf("Runner interval%i\n",RUNNER_INTERVAL);
+	
+	//printf("BOX X:%f,Y:%f\n",diamondX,diamondY);
+	
 	//chooseRandomXYBox();
 	zivot=3;
-	chooseRandomXYBox();
+	
 	glutKeyboardFunc(onKeyboard);
 	glutReshapeFunc(onReshape);
 	glutDisplayFunc(onDisplay);
 	glClearColor(0,0,0,0);
-	//glutTimerFunc(1,onTimer,RUNNER_TIMER);
-	
 	
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_DEPTH_TEST);
