@@ -123,24 +123,36 @@ void movePlayer(){
 	glutPostRedisplay();
 }
 
+bool istaStranaPraveD(float x1,float y1,float x2,float y2,float x,float y){
+	if(((x2-x1)*(diamondY-y1)-(y2-y1)*(diamondX-x1))<0)
+		return false;
+	if(((x1-x)*(diamondY-y)-(diamondX-x)*(y1-y))<0)
+		return false;
+	if(((-x2+x)*(diamondY-y2)-(-x2+diamondX)*(-y2+y))<0)
+		return false;
+	return true;
+}
+
+
 bool isInMap(float x,float y){
 	if(x >=0 && y<0){
-		if(((y+Y_MAX_NEG)*X_MAX_POS-Y_MAX_NEG*x)<0){
+		
+		if(istaStranaPraveD(0,0,0,-4.6,3.9,0.6)==false){
 			return false;
 		}
 	}
 	if(x>=0 && y>=0){
-		if(((-1*y*X_MAX_POS)-(Y_MAX_POS*(x-X_MAX_POS)))<0){
+		if(istaStranaPraveD(3.5,0,0,3.5,0,0)==false){
 			return false;
 		}
 	}
 	if(x<0 && y>=0){
-		if(((-1*X_MAX_NEG*(y-Y_MAX_POS))+Y_MAX_POS*x)<0){
+		if(istaStranaPraveD(-4.6,0,0,0,0.33,3.68)==false){//-1.2,0
 			return false;
 		}
 	}
 	if(x<0 && y<0){
-		if(X_MAX_NEG*y+Y_MAX_NEG*(x+X_MAX_NEG)<0){
+		if(istaStranaPraveD(-4.42,0,0,-4.37,0,0)==false){
 			return false;
 		}
 	}
@@ -150,7 +162,7 @@ bool isInMap(float x,float y){
 
 void chooseRandomXYDiamond(){
 	int znakX,znakY;
-	float rx,ry,dr;
+	int rx,ry;float dr;
 	while(!isInMap(diamondX,diamondY)){
 	srand(time(NULL));
 	rx=rand()%4;
@@ -158,7 +170,7 @@ void chooseRandomXYDiamond(){
 	dr=(((float)(rand()%1000))/1000);
 		//printf("rovi je %f,%f,%f\n",rx,ry,dr);
 	
-	switch(brPoeni%4){
+	switch(rx){
 		case 0:
 			znakX=1;
 			znakY=1;
@@ -199,8 +211,7 @@ void chooseRandomXYDiamond(){
 
 //funkcija za iscrtavanje diamonda
 void drawDiamond(){
-	//GLUquadric *diamond=gluNewQuadric()
-	//glutSolidOctahedron();
+	
 	chooseRandomXYDiamond();
 	glColor3f(1,0.3,0.3);
 	glPushMatrix();//pocetak za ceo diamond
@@ -286,7 +297,7 @@ void drawRunner(){
 
 }
 
-void drawBox(){
+/*void drawBox(){
 	//glColor3f(0.5,0.5,0.2);
 	//chooseRandomXYBox();
 	//printf("drawBox X:%f,Y:%f\n",boxX,boxY);
@@ -308,7 +319,7 @@ void drawBox(){
 	glutPostRedisplay();
 	}
 	else{*/
-		glColor3f(1,0.5,0.2);
+		/*glColor3f(1,0.5,0.2);
 		glPushMatrix();
 		if(boxFlag==1){
 			glColor3f(1,1,1);
@@ -332,8 +343,8 @@ void drawBox(){
 	glScalef(3,1.2,1.8);
 	glutSolidCube(0.2);
 	glPopMatrix();*/
-	glPopMatrix();
+	/*glPopMatrix();
 	
-}
+}*/
 
 

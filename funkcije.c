@@ -17,21 +17,19 @@
 void drawLines(){
 	
 	glColor3f(1,0,0);
-	glBegin(GL_LINES);
-	glVertex3f(-6,0,0);
-	glVertex3f(6,0,0);//crvena je x osa
-	glEnd();
+	for(float i=-6;i<=6;i+=0.5){
+		glBegin(GL_LINES);
+		glVertex3f(6,i,-0.5);
+		glVertex3f(-6,i,-0.5);//crvena je x osa
+		glEnd();
+	}
 	glColor3f(0,1,0);
-	glBegin(GL_LINES);
-	glVertex3f(0,-6,0);
-	glVertex3f(0,6,0);//zelena je y osa
-	glEnd();
-	glColor3f(0,0,1);
-	glBegin(GL_LINES);//plava je z osa
-	glVertex3f(0,0,0);
-	glVertex3f(0,0,6);
-	glEnd();
-	
+	for(float i=-6;i<=6;i+=0.5){
+		glBegin(GL_LINES);
+		glVertex3f(i,-6,-0.5);
+		glVertex3f(i,6,-0.5);//crvena je x osa
+		glEnd();
+	}
 }
 
 
@@ -101,7 +99,7 @@ bool isCollision(){
 		printf("Poeni:%i\n",brPoeni);
 		//drawDiamond();
 		
-		if(brPoeni==12){
+		if(brPoeni==6){
 			return true;
 		}
 	}

@@ -22,4 +22,6 @@ void drawRunner();
 
 void drawBox();
 
+bool istaStranaPraveD(float x1,float y1,float x2,float y2,float x,float y);
+
 

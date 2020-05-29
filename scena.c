@@ -40,9 +40,9 @@ int main(int argc,char** argv){
 	
 	diamondX=-500,diamondY=-500;
 	
-	//printf("BOX X:%f,Y:%f\n",diamondX,diamondY);
+	printf("BOX X:%f,Y:%f\n",diamondX,diamondY);
 	
-	//chooseRandomXYBox();
+	//chooseRandomXYBox();//Da li je potrebno?
 	zivot=3;
 	
 	glutKeyboardFunc(onKeyboard);

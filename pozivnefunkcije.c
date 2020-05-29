@@ -65,13 +65,13 @@ void onDisplay(void){//callback funkcija za prikazivanje
             0, 0, 0,
             1, 1, 0
         );*///pomocni LookAt
-	if(zivot==1){
+	/*if(zivot==1){
 		//boxX=boxY=0;
 		glPushMatrix();
 		
-		drawBox();
+		
 		glPopMatrix();
-	}
+	}*/
 	drawLines();
 	drawDiamond();
 	drawRunner();
