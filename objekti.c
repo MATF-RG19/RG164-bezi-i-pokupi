@@ -205,14 +205,15 @@ void chooseRandomXYDiamond(){
 			diamondX=znakX*rx+znakX*dr;
 			diamondY=znakY*ry+znakY*dr;
 		}
-		printf("DX:%f,DY:%f\n",diamondX,diamondY);
+		//printf("DX:%f,DY:%f\n",diamondX,diamondY);
 	}
 }
 
 //funkcija za iscrtavanje diamonda
 void drawDiamond(){
-	
-	chooseRandomXYDiamond();
+	printf("Usao je \n");
+	//diamondX=diamondY=-500;
+	//chooseRandomXYDiamond();         
 	glColor3f(1,0.3,0.3);
 	glPushMatrix();//pocetak za ceo diamond
 	glTranslatef(diamondX,diamondY,0);
@@ -230,9 +231,11 @@ void drawDiamond(){
 	glutSolidTetrahedron();
 	glPopMatrix();//kraj za drugi diamond
 	glPopMatrix();//kraj za ceo diamond
+	//glutPostRedisplay();
 }
 
 void drawRunner(){
+	
 	glColor3f(0,0,1);
 	glPushMatrix();
 	glTranslatef(runnerX,runnerY,0);
@@ -240,8 +243,6 @@ void drawRunner(){
 	GLUquadric* levaNoga=gluNewQuadric();
 	GLUquadric* desnaNoga=gluNewQuadric();
 	//glScalef(3,3,3);//pomocno skaliranje
-	runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA;
-	runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA;
 	
 	glPushMatrix();//cela figura
 	glPushMatrix();//podnozje
@@ -297,54 +298,5 @@ void drawRunner(){
 
 }
 
-/*void drawBox(){
-	//glColor3f(0.5,0.5,0.2);
-	//chooseRandomXYBox();
-	//printf("drawBox X:%f,Y:%f\n",boxX,boxY);
-	//glScalef(3,3,3);
-	glTranslatef(boxX,boxY,0);
-	
-	glPushMatrix();
-	//glRotatef(90,1,0,0);
-	//glTranslatef(0,1,0);
-	//glColor3f(1,1,1);
-	//printf("%i\n",openBox);
-	/*if(openBox==1){
-	glColor3f(1,1,1);
-	glPushMatrix();
-	glRotatef(90,1,0,0);
-	glScalef(2.2,0.5,1);
-	glutSolidCube(0.2);
-	glPopMatrix();
-	glutPostRedisplay();
-	}
-	else{*/
-		/*glColor3f(1,0.5,0.2);
-		glPushMatrix();
-		if(boxFlag==1){
-			glColor3f(1,1,1);
-			glTranslatef(-0.2,0,0);
-		}
-		glutSolidCube(0.2);
-		glPopMatrix();
-		glPushMatrix();
-		if(boxFlag==1){
-			glColor3f(1,1,1);
-			glTranslatef(.2,0,0);
-			
-		}
-		
-		glutSolidCube(0.2);
-		glPopMatrix();
-		//glutPostRedisplay();
-	//}
-	//glColor3f(0.5,0.5,0.2);
-	/*glPushMatrix();
-	glScalef(3,1.2,1.8);
-	glutSolidCube(0.2);
-	glPopMatrix();*/
-	/*glPopMatrix();
-	
-}*/
 
 

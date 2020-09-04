@@ -25,6 +25,11 @@
 
 #define SIZE 900
 
+#define FILENAME1 "apxbk-uorp0.bmp"
+
+/* Identifikatori tekstura. */
+GLuint names[2];
+
 int dFlag;
 
 float gdx,gdy,glx,gly,dlx,dly,ddx,ddy;
@@ -36,6 +41,8 @@ int zivot;
 int boxFlag,openBox;
 
 float boxX,boxY;
+
+float matrix[16];
 
 int brPoeni;
 

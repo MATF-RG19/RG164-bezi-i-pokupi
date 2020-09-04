@@ -12,6 +12,45 @@
 
 #include "objekti.h"
 
+
+void onTimer(int value){
+	
+	/*if(value!=RUNNER_TIMER){
+		//horisontal,vertical,runnerX,runnerY
+		runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA/3;
+		runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA/3;
+		printf("Runner: %f,%f\n",runnerX,runnerY);
+		//drawRunner();
+		//glutPostRedisplay();
+		//glutTimerFunc(RUNNER_INTERVAL,onTimer,RUNNER_TIMER);
+	}*/
+	//if(value==BOX_TIMER){
+		//boxFlag*=-1;
+		//printf("Pozdrav iz box timera\n");
+		//printf("BOX X:%f,Y:%f\n",boxX,boxY);
+		//glPushMatrix();
+	
+	//chooseRandomXYBox();
+		/*drawBox();
+		glPopMatrix();
+		glutPostRedisplay();
+		glutTimerFunc(BOX_INTERVAL,onTimer,BOX_TIMER);
+	}*/
+	//else return;
+	if(value!=1)
+		return;
+	//if(animationParameter>=3)
+		//return;
+	if(value==1){
+		//drawRunner();
+		runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA*0.3;
+		runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA*0.3;
+		//printf("RUNNER: (%.4f,%.4f)\n",runnerX,runnerY);
+		glutPostRedisplay();
+		glutTimerFunc(500,onTimer,1);
+	}
+}
+
 void onDisplay(void){//callback funkcija za prikazivanje
 	//Ciscenje bafera
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -73,23 +112,60 @@ void onDisplay(void){//callback funkcija za prikazivanje
 		glPopMatrix();
 	}*/
 	drawLines();
+	//chooseRandomXYDiamond();
 	drawDiamond();
+	glutTimerFunc(500,onTimer,1);
 	drawRunner();
+	//glutTimerFunc(10,onTimer,1);
 	drawPlayer();
 	if(kolizija(horisontal,vertical,diamondX,diamondY)){
 		brPoeni++;
+		diamondX=diamondY=-500;
+		printf("Poeni:%i,%i\n",brPoeni,brPoeni==3);
+		if(brPoeni==3){
+			printf("Pobedili ste!\n");
+			exit(0);
+		}
+		chooseRandomXYDiamond();
 		drawDiamond();
 	}
 	
 	if(kolizija(horisontal,vertical,runnerX,runnerY)){
 		
-		runnerX=runnerY=RUNNER_POC/2;
+		runnerX=runnerY=RUNNER_POC;
 		zivot--;
 	}
 	if(zivot==0){
 		printf("izgubili ste\n");
 		exit(0);
 	}
+	glMultMatrixf(matrix);
+
+    /* Primjenjuje se translacija koja ce centrirati scenu. */
+    glTranslatef(-3, -2.5, 0);
+
+    /* Crtaju se vrata kuce. */
+    
+    /* Crta se zid kuce. */
+    glBindTexture(GL_TEXTURE_2D, names[1]);
+    glBegin(GL_QUADS);
+        glNormal3f(0, 0, 1);
+
+        glTexCoord2f(-14, -14);
+        glVertex3f(-7, -7, -0.3);
+
+        glTexCoord2f(28, 0);
+        glVertex3f(14, 0, -0.3);
+
+        glTexCoord2f(28, 10);
+        glVertex3f(28, 7, -0.3);
+
+        glTexCoord2f(0, 14);
+        glVertex3f(0, 7, -0.3);
+    glEnd();
+
+    /* Iskljucujemo aktivnu teksturu */
+    glBindTexture(GL_TEXTURE_2D, 0);
 	glutSwapBuffers();
 }
 
@@ -97,6 +173,7 @@ void onKeyboard(unsigned char key,int x,int y){
 	switch(key){
 		case 27:
 			exit(0);
+			glDeleteTextures(2, names);
 			break;
 		case 'w':
 		case 'W':
@@ -106,9 +183,9 @@ void onKeyboard(unsigned char key,int x,int y){
 			rukeFlag*=-1;
 			vertical+=KORAK_IGRACA;
 			horisontal+=KORAK_IGRACA;
-			if(isCollision()){
+			/*if(isCollision()){
 				printf("Pobeda\n");
-			}
+			}*/
 			break;
 		case 's':
 		case 'S':
@@ -118,9 +195,9 @@ void onKeyboard(unsigned char key,int x,int y){
 			rukeFlag*=-1;
 			vertical-=KORAK_IGRACA;
 			horisontal-=KORAK_IGRACA;
-			if(isCollision()){
+			/*if(isCollision()){
 				printf("Pobeda\n");
-			}
+			}*/
 			break;
 		case 'a':
 		case 'A':
@@ -130,9 +207,9 @@ void onKeyboard(unsigned char key,int x,int y){
 			rukeFlag*=-1;
 			horisontal-=KORAK_IGRACA;
 			vertical+=KORAK_IGRACA;
-			if(isCollision()){
+			/*if(isCollision()){
 				printf("Pobeda\n");
-			}
+			}*/
 			break;
 		case 'd':
 		case 'D':
@@ -142,9 +219,9 @@ void onKeyboard(unsigned char key,int x,int y){
 			rukeFlag*=-1;
 			horisontal+=KORAK_IGRACA;
 			vertical-=KORAK_IGRACA;
-			if(isCollision()){
+			/*if(isCollision()){
 				printf("Pobeda\n");
-			}
+			}*/
 			break;
 		default:
 			break;
@@ -216,36 +293,3 @@ void onReshape(int width,int height){
     glutPostRedisplay();
 }
 
-void onTimer(int value){
-	
-	/*if(value!=RUNNER_TIMER){
-		//horisontal,vertical,runnerX,runnerY
-		runnerX+=((horisontal-runnerX)/fabs(horisontal-runnerX))*KORAK_IGRACA/3;
-		runnerY+=((vertical-runnerY)/fabs(vertical-runnerY))*KORAK_IGRACA/3;
-		printf("Runner: %f,%f\n",runnerX,runnerY);
-		//drawRunner();
-		//glutPostRedisplay();
-		//glutTimerFunc(RUNNER_INTERVAL,onTimer,RUNNER_TIMER);
-	}*/
-	//if(value==BOX_TIMER){
-		//boxFlag*=-1;
-		//printf("Pozdrav iz box timera\n");
-		//printf("BOX X:%f,Y:%f\n",boxX,boxY);
-		//glPushMatrix();
-	
-	//chooseRandomXYBox();
-		/*drawBox();
-		glPopMatrix();
-		glutPostRedisplay();
-		glutTimerFunc(BOX_INTERVAL,onTimer,BOX_TIMER);
-	}*/
-	//else return;
-	if(value!=1)
-		return;
-	if(animationParameter>=3)
-		return;
-	if(value==1){
-		animationParameter+=0.1;
-		glutTimerFunc(10,onTimer,1);
-	}
-}

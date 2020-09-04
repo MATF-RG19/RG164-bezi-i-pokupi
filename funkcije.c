@@ -99,7 +99,7 @@ bool isCollision(){
 		printf("Poeni:%i\n",brPoeni);
 		//drawDiamond();
 		
-		if(brPoeni==6){
+		if(brPoeni==3){
 			return true;
 		}
 	}
